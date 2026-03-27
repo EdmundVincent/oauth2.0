@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>SBAPP Client</title>
+</head>
+<body>
+<h1>SBAPP Client</h1>
+
+<p><a th:href="${idpRegisterUrl}" target="_blank" rel="noreferrer">去 IdP 注册</a></p>
+<p><a href="/login">使用 IdP 登录</a></p>
+
+<div th:if="${loggedIn}">
+    <p><a href="/me">查看我的信息</a></p>
+    <p><a href="/logout">退出（联动 IdP）</a></p>
+</div>
+
+</body>
+</html>

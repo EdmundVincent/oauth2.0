@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Me</title>
+</head>
+<body>
+<h1>Me</h1>
+
+<p><a href="/">返回首页</a></p>
+
+<p>token_type: <span th:text="${tokenType}"></span></p>
+<p>expires_at: <span th:text="${expiresAt}"></span></p>
+
+<h2>userinfo</h2>
+<pre th:text="${userinfoJson}"></pre>
+
+<div th:if="${idToken}">
+    <h2>id_token</h2>
+    <pre th:text="${idToken}"></pre>
+</div>
+
+<p><a href="/logout">退出（联动 IdP）</a></p>
+
+</body>
+</html>

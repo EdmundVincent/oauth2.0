@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; }
+        .box { max-width: 720px; }
+        label { display: block; margin-top: 10px; }
+        input { width: 360px; padding: 6px; }
+        .error { color: #c00; margin: 8px 0; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h1>注册</h1>
+
+    {{if .Error}}<div class="error">{{.Error}}</div>{{end}}
+
+    <form method="post" action="/register">
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+
+        <label>用户名（username）
+            <input name="username" required>
+        </label>
+
+        <label>邮箱（email）
+            <input name="email" type="email" required>
+        </label>
+
+        <label>显示名（display_name）
+            <input name="display_name" required>
+        </label>
+
+        <label>密码（password，至少 8 位，数字+字母）
+            <input name="password" type="password" required minlength="8">
+        </label>
+
+        <div style="margin-top:14px">
+            <button type="submit">提交注册</button>
+            <a href="/login" style="margin-left:8px">去登录</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

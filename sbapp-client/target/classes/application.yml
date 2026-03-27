@@ -1,0 +1,11 @@
+server:
+  port: 8081
+
+idp:
+  public-base-url: ${IDP_PUBLIC_BASE_URL:${IDP_BASE_URL:http://localhost:8080}}
+  internal-base-url: ${IDP_INTERNAL_BASE_URL:${IDP_BASE_URL:http://localhost:8080}}
+  client-id: ${IDP_CLIENT_ID:sbapp}
+  client-secret: ${IDP_CLIENT_SECRET:sbapp-secret-123}
+  redirect-uri: ${IDP_REDIRECT_URI:http://localhost:8081/callback}
+  scope: ${IDP_SCOPE:openid profile email}
+  post-logout-redirect-uri: ${IDP_POST_LOGOUT_REDIRECT_URI:http://localhost:8081/logged-out}

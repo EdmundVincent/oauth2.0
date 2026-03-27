@@ -6,6 +6,7 @@ import (
 
 	"idp-server/internal/application/register"
 	"idp-server/internal/interfaces/http/dto"
+	"idp-server/resource"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,6 +26,12 @@ func (h *RegisterHandler) Handle(c *gin.Context) {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate csrf token"})
 			return
 		}
+		if wantsHTML(c.GetHeader("Accept")) {
+			h.renderRegisterPage(c, http.StatusOK, registerPageData{
+				CSRFToken: csrfToken,
+			})
+			return
+		}
 		c.JSON(http.StatusOK, gin.H{
 			"endpoint":   "register",
 			"message":    "submit username, email, display_name and password to register",
@@ -39,6 +46,13 @@ func (h *RegisterHandler) Handle(c *gin.Context) {
 		return
 	}
 	if err := validateCSRFToken(c, req.CSRFToken); err != nil {
+		if wantsHTML(c.GetHeader("Accept")) {
+			h.renderRegisterPage(c, http.StatusForbidden, registerPageData{
+				CSRFToken: "",
+				Error:     "invalid csrf token",
+			})
+			return
+		}
 		c.JSON(http.StatusForbidden, gin.H{"error": errInvalidCSRFToken.Error()})
 		return
 	}
@@ -65,7 +79,18 @@ func (h *RegisterHandler) Handle(c *gin.Context) {
 			status = http.StatusInternalServerError
 		}
 
+		if wantsHTML(c.GetHeader("Accept")) {
+			h.renderRegisterPage(c, status, registerPageData{
+				Error: err.Error(),
+			})
+			return
+		}
 		c.JSON(status, gin.H{"error": err.Error()})
+		return
+	}
+
+	if wantsHTML(c.GetHeader("Accept")) {
+		c.Redirect(http.StatusFound, "/login")
 		return
 	}
 
@@ -79,4 +104,23 @@ func (h *RegisterHandler) Handle(c *gin.Context) {
 		"status":         result.Status,
 		"created_at":     result.CreatedAt,
 	})
+}
+
+type registerPageData struct {
+	CSRFToken string
+	Error     string
+}
+
+func (h *RegisterHandler) renderRegisterPage(c *gin.Context, status int, data registerPageData) {
+	if data.CSRFToken == "" {
+		token, err := ensureCSRFToken(c)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to generate csrf token"})
+			return
+		}
+		data.CSRFToken = token
+	}
+	c.Header("Content-Type", "text/html; charset=utf-8")
+	c.Status(status)
+	_ = resource.RegisterPageTemplate.Execute(c.Writer, data)
 }

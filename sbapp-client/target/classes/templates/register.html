@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; }
+        .box { max-width: 720px; }
+        .actions a { margin-right: 12px; }
+        code { background: #f5f5f5; padding: 2px 4px; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h1>注册</h1>
+    <p>注册表单由身份服务（IdP）处理。点击下面的按钮，在新标签页打开 IdP 的注册页面：</p>
+    <p class="actions">
+        <a th:href="${idpRegisterUrl}" target="_blank" rel="noreferrer">打开 IdP 注册接口</a>
+        <a href="/">返回首页</a>
+    </p>
+    <p>提示：当前 IdP 的 <code>GET /register</code> 接口返回 JSON（同时下发 CSRF cookie），并非 HTML 页面。你可以在该页看到 <code>csrf_token</code>，随后通过表单或 Postman 调用 <code>POST /register</code> 完成注册。</p>
+</div>
+</body>
+</html>
